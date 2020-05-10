@@ -1,8 +1,11 @@
 try: 
-
+    # Imported Libraries
     import arcpy
     from arcpy import env
     from arcpy.sa import *
+
+    #Workspace - May need to change to run on other computer.
+    
     env.workspace = "C:/Users/jimmy/Desktop/Final Project/FinalProject.gdb"
     env.overwriteOutput = True
 
@@ -36,22 +39,22 @@ try:
     #Housing Select Operations
 
     arcpy.Select_analysis(housingunits, "C:/Users/jimmy/Desktop/Final Project/FinalProject.gdb/newconstruction", "Reporting_Construction_Type = 'New Construction'")
-    arcpy.Select_analysis("newconstruction", "C:/Users/jimmy/Desktop/Final Project/FinalProject.gdb/newconstruction_select",whereClause1 + " AND " + whereClause2)
+    arcpy.Select_analysis("newconstruction", "C:/Users/jimmy/Desktop/Final Project/FinalProject.gdb/NewConstruction_UnitRange",whereClause1 + " AND " + whereClause2)
 
 
     #Buffer Operations
 
-    arcpy.Buffer_analysis("newconstruction_select", "newconstruction_select_buffer", buffdist, "Full")
+    arcpy.Buffer_analysis("NewConstruction_UnitRange", "NewConstruction_Select_Buffer", buffdist, "Full")
 
     #Select By Location
 
     arcpy.MakeFeatureLayer_management(MapPLUTO, "MapPLUTO_lyr")
-    arcpy.SelectLayerByLocation_management("MapPLUTO_lyr", "INTERSECT", "newconstruction_select_buffer", "", "NEW_SELECTION")
+    arcpy.SelectLayerByLocation_management("MapPLUTO_lyr", "INTERSECT", "NewConstruction_Select_Buffer", "", "NEW_SELECTION")
     arcpy.CopyFeatures_management("MapPLUTO_lyr", "Location_Parcels")
 
     #Copy Selected Features/Final Ouput
 
-    arcpy.Select_analysis("Location_Parcels", "possible_parcels", whereClause3)
+    arcpy.Select_analysis("Location_Parcels", "Possible_Parcels", whereClause3)
 
 
 except arcpy.ExecuteError:
